@@ -1,0 +1,201 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <title>Финансовая Модель</title>
+
+    <!--
+    Loading Handsontable (full distribution that includes all dependencies apart from jQuery)
+    -->
+    <script data-jsfiddle="common" src="dist/handsontable.full.js"></script>
+    <link data-jsfiddle="common" rel="stylesheet" media="screen" href="dist/handsontable.full.css">
+    <link  rel="stylesheet" media="screen" href="dist/pure-min.css">
+    <link  rel="stylesheet" media="screen" href="dist/side-menu.css">
+    <link  rel="stylesheet" media="screen" href="dist/model-calculation.css">
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script>
+        google.load('visualization', '1', {packages: ['corechart', 'line']});
+    </script>
+</head>
+
+<body class="home">
+
+<div class="header">
+    <h1>Финансовая Модель МФО</h1>
+    <h2>Цифры, которые должны что-то показать</h2>
+
+</div>
+
+
+<div class="content">
+
+    <h2 class="content-subhead">Таблицепостроитель</h2>
+
+    <div id="mfotable"></div>
+
+    <div id="investmenst-amount"></div>
+
+    <form class="pure-form pure-form-stacked" id="parameters-form" method="get" action="index.html">
+
+        </fieldset>
+
+        <fieldset>
+            <div class="pure-g">
+                <div class="pure-u-1-2">
+
+                    <div class="pure-control-group">
+                        <label for="model-name">Название модели</label>
+                        <input name="model-name" id="model-name" type="text" class="no-graph" placeholder="" value="">
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>Новые клиенты:</legend>
+
+            <div class="pure-g">
+                <div class="pure-u-1-2">
+
+                    <div class="pure-control-group">
+                        <label for="traffic-first-week">Трафик в первую неделю</label>
+                        <input name="traffic-first-week" id="traffic-first-week" type="text" value="">
+                    </div>
+
+                    <div class="pure-control-group">
+                        <label for="traffic-last-week">Трафик в последнюю неделю</label>
+                        <input name="traffic-last-week" id="traffic-last-week" type="text" value="">
+                    </div>
+
+                </div>
+                <div class="pure-u-1-2">
+
+                    <div class="pure-control-group">
+                        <label for="cpc">Стоимость посетителя</label>
+                        <input name="cpc" id="cpc" type="text" value="">
+                    </div>
+
+                    <div class="pure-control-group">
+                        <label for="c1-register">C1 - конверсия в регистрации, %</label>
+                        <input name="c1-register" id="c1-register" type="text" placeholder="" value="">
+                    </div>
+
+                    <div class="pure-control-group">
+                        <label for="c2-sale">C2 - конверсия в продажи, %</label>
+                        <input name="c2-sale" id="c2-sale" type="text" placeholder="" value="">
+                    </div>
+
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Повторные клиенты:</legend>
+
+            <div class="pure-g">
+
+                <div class="pure-u-1-2">
+
+                    <div class="pure-control-group">
+                        <label for="retention-period">Повторный клиент возвращается через (в неделях)</label>
+                        <input name="retention-period" id="retention-period" type="text" value="">
+                    </div>
+
+                </div>
+
+                <div class="pure-u-1-2">
+
+                    <div class="pure-control-group">
+                        <label for="crr">CRR – доля повторных клиентов, %</label>
+                        <input name="crr" id="crr" type="text" value="">
+                    </div>
+
+                </div>
+
+            </div>
+        </fieldset>
+
+
+
+
+        <fieldset>
+            <legend>Общие Параметры:</legend>
+            <div class="pure-g">
+                <div class="pure-u-1-2">
+
+                    <div class="pure-control-group">
+                        <label for="sale-price">Цена продажи (средний чек)</label>
+                        <input name="sale-price" id="sale-price" type="text" value="">
+                    </div>
+
+
+                    <div class="pure-control-group">
+                        <label for="op-expenses">Операционные расходы (в мес.)</label>
+                        <input name="op-expenses" id="op-expenses" type="text" value="">
+                    </div>
+
+                </div>
+
+                <div class="pure-u-1-2">
+
+                    <div class="pure-control-group">
+                        <label for="num-of-weeks">Количество недель для расчета</label>
+                        <input name="num-of-weeks" id="num-of-weeks" type="text" value="106">
+                    </div>
+
+                    <div class="pure-control-group">
+                        <label for="currency">Валюта</label>
+                        <select name="currency" id="currency">
+                            <option value="RUR">Руб.</option>
+                            <option value="USD">$</option>
+                            <option value="EUR">€</option>
+                            <option value="GBP">£</option>
+                        </select>
+                    </div>
+
+                </div>
+
+            </div>
+        </fieldset>
+
+            <div class="pure-g">
+                <div class="pure-u-1-1">
+                    <div class="pure-controls">
+                        <button type="submit" class="pure-button pure-button-primary">Рассчитать таблицу</button>
+                    </div>
+                </div>
+            </div>
+
+    </form>
+
+    <h2 class="content-subhead">Графикопостроитель</h2>
+
+    <p>
+        Показать зависимость <strong>Прибыли</strong> от
+         <select name="vAxisSelect" id="vAxisSelect">
+        </select>
+    </p>
+    <p>
+        Диапазон значений с <input  id="graph-from" type="text" value="1"> по <input id="graph-to" type="text" value="2">
+    </p>
+    <p>
+        (остальные параметры берутся из формы выше)
+    </p>
+
+    <p>
+        <button type="submit" id="build-graph" class="pure-button pure-button-primary">Построить график</button>
+    </p>
+
+    <div id="charts"></div>
+
+    <div class="footer-text">
+    </div>
+</div>
+
+
+<!-- <script src="dist/ui.js"></script> -->
+<script src="dist/jquery-2.1.4.min.js"></script>
+<script src="dist/languages.min.js"></script>
+<script src="dist/model-calculation.js"></script>
+
+</body>
+</html>

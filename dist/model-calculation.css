@@ -1,0 +1,25 @@
+#mfotable {
+    margin-top: 60px;
+    margin-bottom: 5px;
+}
+
+#investmenst-amount {
+    margin-bottom: 55px;
+}
+
+.handsontable col.rowHeader {
+    width: 410px;
+}
+
+.handsontable th {
+    text-align: right;
+    padding-right: 8px;
+}
+
+.negative-value {
+    color: #c12e2a;
+}
+
+#model-name {
+    width: 100%;
+}
