@@ -1,76 +1,61 @@
 # Быстрый анализ финансовой-модели
 
-Назначение этого кода - замена Excel для быстрого анализа финансовой модели. Часто возникают ситуации, когда необходимо произвести грубый расчет вновь возникшей идеи, оценить ее ключевые значения, проанализировать влияние основных факторов.
+Назначение этой таблицы - замена Excel для быстрого анализа финансовой модели. Часто возникают ситуации, когда необходимо произвести грубый расчет вновь возникшей идеи, оценить ее ключевые значения, проанализировать влияние основных факторов.
 
+### Почему отдельное решение (а не Excel)?
 
-Модель создавалась для конкретной задачи, push-request'ы приветствуются. 
+* Сложность работы с повторными (retention) периодами в Excel. Изменение периодов влечет к сдвигу колонок, что сложно сделать нативными средствами Excel (и он теряет свое удобство и наглядность)
+* Удобство адаптации. Код основан на [HandsOnTable](http://www.handsontable.com), изменять и адаптировать строки и формулы удобно и быстро. 
+* Удобство хранения и шаринга различных вариантов моделей. Параметры кодируются в URL в виде GET запросов - можно не хранить несколько версий Excel файлов, а сохранять и отправлять URL нужной модели в мессенджере
+* Построение графиков зависимости прибыли от параметров модели. 
+
+Пример модели: [http://financial-model.netlify.com/](http://financial-model.netlify.com/index.html?model-name=Пример+модели&installment-investment=100000&traffic-first-week=100&traffic-last-week=200&cpc=30&c1-register=15&c2-sale=50&retention-period=4&crr=70&sale-price=500&op-expenses=20000&num-of-weeks=52&currency=RUR)
  
 - - -
 
-### Quick start
+### Внесение изменений
 
-1. A recommended way to install Handsontable is through [Bower](http://bower.io/search/?q=handsontable) package manager using the following command:
+Модель изначально создавалась под конкретную задачу, для решения других задач и получения других метрик могут потребоваться изменения. Это делается максимально просто.
 
-  `bower install handsontable --save`
+Работа производится с двумя файлами:
 
-  Alternatively, you can [download it in a ZIP file](https://github.com/handsontable/handsontable/archive/master.zip).
+* /index.html - отображение
+* /dist/model-calculation.js - логика расчета
 
-2. After Handsontable is downloaded, embed the code into your project. All the files that you need are in the `dist\` directory:
+#### Добавление новых параметров
 
-  ```html
-  <script src="dist/handsontable.full.js"></script>
-  <link rel="stylesheet" media="screen" href="dist/handsontable.full.css">
-  ```
+Параметры задаются в файле index.html путем добавления полей ввода. С учетом используемого CSS-фреймворка (Pure) задается следующая конструкция:
 
-3. Then, create a new `Handsontable` object, passing a reference to an empty div as a first argument. After that, load some data if you wish:
+	<div class="pure-control-group">
+    	<label for="traffic-last-week">Трафик в последнюю неделю</label>
+        <input name="traffic-last-week" id="traffic-last-week" type="text" value="">
+	</div>
 
-  ```html
-  <div id="example"></div>
+Параметры передаются в функцию get_data_table() в массив params, доступ к нужному значению: params["traffic-last-week"]
 
-  <script>
-    var data = [
-      ["", "Kia", "Nissan", "Toyota", "Honda"],
-      ["2008", 10, 11, 12, 13],
-      ["2009", 20, 11, 14, 13],
-      ["2010", 30, 15, 12, 13]
-    ];
-    
-   var container = document.getElementById('example');
-    var hot = new Handsontable(container,
-     {
-       data: data
-      });
-  </script>
-  ```
+#### Изменения в расчете
 
-### API Reference
+Расчет происходит в функции get_data_table() в файле model-calculation.js
+Происходит проход по столбцам, расчет строки происходит следующим образом:
 
-- [Core methods](http://docs.handsontable.com/0.17.0/Core.html)
-- [Options](http://docs.handsontable.com/0.17.0/Options.html)
-- [Hooks](http://docs.handsontable.com/0.17.0/Hooks.html)
+        // Инкрементация номера строки
+        rowNum++;
+        
+        // Референс создаваемой строки: clients-new
+        setRow(rowNum, "Новых продаж", "clients-new");
+        
+        // Ссылка на предыдущую строку текущего столбца, если необходимо: table[rowNames["register-new"]][i]
+        table[rowNum][i] = table[rowNames["register-new"]][i] * params["c2-sale"] / 100;
+        
+        // Формат ячейки: formatNumber или formatCurrency
+        cellFormat[rowNum][i] = formatNumber;
 
-### Troubleshooting
 
-Please follow this guidelines when reporting bugs and feature requests:
+Блоки со строками можно удалять или перемещать, необходимо отследить зависимости других строк от них.
 
-1. Use [GitHub Issues](https://github.com/handsontable/handsontable/issues) board to report bugs and feature requests (not our email address)
-2. Please **always** write steps to reproduce the error. That way we can focus on fixing the bug, not scratching our heads trying to reproduce it.
-3. If possible, please add a JSFiddle link that shows the problem (start by forking [this fiddle](http://jsfiddle.net/js_ziggle/hU6Kz/3228/)). It saves us much time.
-4. If you can't reproduce it on JSFiddle, please add a screenshot that shows the problem. JSFiddle is much more appreciated because it lets us start fixing straight away.
+При необходимости можно вставить пустую строку:
 
-Thanks for understanding!
-
-### Compatibility
-
-Handsontable is compatible with IE 9+, Firefox, Chrome, Safari and Opera.
-
-### Want to help?
-
-Please see [CONTRIBUTING.md](CONTRIBUTING.md)
-
-### Changelog
-
-To see the list of recent changes, see [Releases section](https://github.com/handsontable/handsontable/releases).
+	addEmptyRow();
 
 ### License
 
