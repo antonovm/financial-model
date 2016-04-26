@@ -195,7 +195,7 @@ function get_data_table(params) {
         // COGS - оп. затраты на 1 продажу
         rowNum++;
         setRow(rowNum, "COGS - оп. затраты на 1 продажу", "client-cogs");
-        table[rowNum][i] = table[rowNames["op-expenses"]][i] * params["cpc"] / table[rowNames["sales-total"]][i];
+        table[rowNum][i] = table[rowNames["op-expenses"]][i] / table[rowNames["sales-total"]][i];
         cellFormat[rowNum][i] = formatCurrency;
 
         // Всего потрачено / новые клиенты
@@ -216,7 +216,7 @@ function get_data_table(params) {
         table[rowNum][i] =  Number(params["sale-price"]) / (1-(Number(params["crr"])/100));
         cellFormat[rowNum][i] = formatCurrency;
 
-        // Customer Lifetime Value
+        // Customer Lifetime Profit
         rowNum++;
         setRow(rowNum, "CLP (Customer Lifetime Profit)", "clp");
         table[rowNum][i] =  table[rowNames["cltv"]][i] - table[rowNames["client-cac"]][i] - (table[rowNames["client-cogs"]][i] / (1-(Number(params["crr"])/100)));
