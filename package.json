@@ -1,7 +1,7 @@
 {
-  "name": "handsontable",
-  "description": "Spreadsheet-like data grid editor that provides copy/paste functionality compatible with Excel/Google Docs",
-  "homepage": "http://handsontable.com/",
+  "name": "Fast business model analysis",
+  "description": "Tool for fast financial business model calculation",
+  "homepage": "",
   "repository": {
     "type": "git",
     "url": "https://github.com/handsontable/handsontable.git"
@@ -9,21 +9,16 @@
   "bugs": {
     "url": "https://github.com/handsontable/handsontable/issues"
   },
-  "author": "Handsoncode <hello@handsontable.com>",
-  "version": "0.18.0",
+  "author": "Maxim Antonov <hello@handsontable.com>",
+  "version": "0.1",
   "keywords": [
-    "data",
-    "grid",
+    "startup",
+    "saas",
+    "business model",
     "table",
-    "editor",
-    "grid-editor",
-    "data-grid",
     "data-table",
     "spreadsheet",
     "excel",
-    "tabular-data",
-    "edit-cell",
-    "editable-table",
     "data-spreadsheet"
   ],
   "devDependencies": {

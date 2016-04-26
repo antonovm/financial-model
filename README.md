@@ -1,9 +1,6 @@
-# Handsontable [![Build Status](https://travis-ci.org/handsontable/handsontable.png?branch=master)](https://travis-ci.org/handsontable/handsontable)
+# Быстрый анализ бизнес-модели
 
-Handsontable is a data grid component with an Excel-like appearance. Built in JavaScript, it integrates with any data source and comes with [features](http://docs.handsontable.com/0.17.0/tutorial-features.html) like data validation, sorting, grouping, data binding or column ordering. Actively supported by the Handsoncode team and the GitHub community.
-
-Check out the demos at http://handsontable.com/examples.html or fork the example on
-[JSFiddle](http://jsfiddle.net/js_ziggle/hU6Kz/3228/) to see Handsontable in action.
+Этот скрипт предназначен
 
 - - -
 

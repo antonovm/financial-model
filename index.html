@@ -21,7 +21,7 @@
 <body class="home">
 
 <div class="header">
-    <h1>Финансовая Модель МФО</h1>
+    <h1>Финансовая Модель</h1>
     <h2>Цифры, которые должны что-то показать</h2>
 
 </div>
@@ -47,6 +47,12 @@
                         <label for="model-name">Название модели</label>
                         <input name="model-name" id="model-name" type="text" class="no-graph" placeholder="" value="">
                     </div>
+
+                    <div class="pure-control-group">
+                        <label for="installment-investment">Первоначальные вложения</label>
+                        <input name="installment-investment" id="installment-investment" type="text" value="0">
+                    </div>
+
                 </div>
             </div>
         </fieldset>
@@ -89,14 +95,14 @@
         </fieldset>
 
         <fieldset>
-            <legend>Повторные клиенты:</legend>
+            <legend>Повторные продажи:</legend>
 
             <div class="pure-g">
 
                 <div class="pure-u-1-2">
 
                     <div class="pure-control-group">
-                        <label for="retention-period">Повторный клиент возвращается через (в неделях)</label>
+                        <label for="retention-period">Клиент совершает новую покупку через (в неделях)</label>
                         <input name="retention-period" id="retention-period" type="text" value="">
                     </div>
 
@@ -105,7 +111,7 @@
                 <div class="pure-u-1-2">
 
                     <div class="pure-control-group">
-                        <label for="crr">CRR – доля повторных клиентов, %</label>
+                        <label for="crr">CRR – доля повторных продаж, %</label>
                         <input name="crr" id="crr" type="text" value="">
                     </div>
 

@@ -186,13 +186,13 @@ function get_data_table(params) {
 
         addEmptyRow();
 
-        // Стоимость продажи
+        // CAC - стоимость привлечения 1 нового клиента
         rowNum++;
         setRow(rowNum, "CAC - стоимость привлечения 1 нового клиента", "client-cac");
         table[rowNum][i] = table[rowNames["total-cac"]][i] / table[rowNames["clients-new"]][i];
         cellFormat[rowNum][i] = formatCurrency;
 
-        // Стоимость продажи
+        // COGS - оп. затраты на 1 продажу
         rowNum++;
         setRow(rowNum, "COGS - оп. затраты на 1 продажу", "client-cogs");
         table[rowNum][i] = table[rowNames["op-expenses"]][i] * params["cpc"] / table[rowNames["sales-total"]][i];
@@ -204,6 +204,23 @@ function get_data_table(params) {
         table[rowNum][i] = table[rowNames["spent-total"]][i] / table[rowNames["clients-new"]][i];
         cellFormat[rowNum][i] = formatCurrency;
 
+        // LT (Время жизни клиента), недель
+        rowNum++;
+        setRow(rowNum, "LT (Время жизни клиента), недель", "life-time");
+        table[rowNum][i] = Number(params["retention-period"]) / (1-(Number(params["crr"])/100));
+        cellFormat[rowNum][i] = formatNumber;
+
+        // Customer Lifetime Value
+        rowNum++;
+        setRow(rowNum, "CLTV (Customer Lifetime Value)", "cltv");
+        table[rowNum][i] =  Number(params["sale-price"]) / (1-(Number(params["crr"])/100));
+        cellFormat[rowNum][i] = formatCurrency;
+
+        // Customer Lifetime Value
+        rowNum++;
+        setRow(rowNum, "CLP (Customer Lifetime Profit)", "clp");
+        table[rowNum][i] =  table[rowNames["cltv"]][i] - table[rowNames["client-cac"]][i] - (table[rowNames["client-cogs"]][i] / (1-(Number(params["crr"])/100)));
+        cellFormat[rowNum][i] = formatCurrency;
 
         addEmptyRow();
 
@@ -216,7 +233,7 @@ function get_data_table(params) {
         // Кошелек (net flow)
         rowNum++;
         setRow(rowNum, "Кошелек (net flow)", "net-flow");
-        var netflow = (i > 0 ? table[rowNames["net-flow"]][i - 1] : 0) + table[rowNames["income-spent"]][i];
+        var netflow = (i > 0 ? table[rowNames["net-flow"]][i - 1] : (Number(params["installment-investment"]) * (-1)) ) + table[rowNames["income-spent"]][i];
         if (investmentsRequired == null || netflow < investmentsRequired) investmentsRequired = netflow;
         if (maxWalletAmount == null || netflow > maxWalletAmount) maxWalletAmount = netflow;
         table[rowNum][i] = netflow;
@@ -234,6 +251,13 @@ function get_data_table(params) {
     // S – сумма начисленных процентов (в денежном выражении).
 
     var annualInterestRate = maxWalletAmount*53/((investmentsRequired * (-1)) * params["num-of-weeks"]);
+
+
+    // Расчет LifeTime (недель)
+    // По формуле LT = RP/(1 - (CRR/100))
+    // RP - Retention period
+    // CRR - доля повторных продаж, %
+    // var lifeTime = Number(params["retention-period"]) / (1-(Number(params["crr"])/100));
 
     data["table"] = table;
     data["cellFormat"] = cellFormat;
@@ -264,7 +288,7 @@ function drawGraph() {
     var d=from;
     var hValue = 0;
 
-    // Для расчета угла
+    // Для расчета угла (не используется)
     //var minX = 0;
     //var minY = 0;
     //var maxX = 0;
@@ -281,7 +305,7 @@ function drawGraph() {
         table[i][1] = calcData["maxWalletAmount"];
         table[i][2] = calcData["annualInterestRate"]*100;
 
-        // Расчет координаты 1й вершины треугольника
+        // Расчет координаты 1й вершины треугольника (не используется)
         //if (d == from) {
         //    minY = hValue;
         //    minX = d;
@@ -297,7 +321,7 @@ function drawGraph() {
         i++;
     }
 
-    // Расчет координаты 2й вершины треугольника
+    // Расчет координаты 2й вершины треугольника (не используется)
     //maxY = hValue;
     //maxX = d - step;
     // Расчет угла
@@ -400,7 +424,8 @@ $( document ).ready(function() {
         });
 
         // Статистика по таблице
-        $("#investmenst-amount").html('Нижнее значение кошелька: ' + numeral(data["investmentsRequired"]).format(data["formatCurrency"]) + '<br> Ставка прибыли на конец срока, годовых: ' + numeral(data["annualInterestRate"]).format('0.00%'));
+        $("#investmenst-amount").html('Нижнее значение кошелька: ' + numeral(data["investmentsRequired"]).format(data["formatCurrency"]) +
+            '<br> Ставка прибыли на конец срока, годовых: ' + numeral(data["annualInterestRate"]).format('0.00%'));
     }
 
     //  Заполнить дропдаун выбора для графика
